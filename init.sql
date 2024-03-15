@@ -1,0 +1,24 @@
+CREATE TABLE USERDATA (
+    ID INT PRIMARY KEY,
+    NAME VARCHAR(256),
+    CITY VARCHAR(256),
+    PINCODE INT
+);
+
+CREATE TABLE CITYDATA(
+    PINCODE INT PRIMARY KEY,
+    CITY VARCHAR(256)
+);
+
+INSERT INTO USERDATA(ID, NAME, CITY, PINCODE)
+VALUES
+    (69, 'Peter', 'Quahog', 123123),
+    (420, 'Quagmire', 'LA', 123699),
+    (90, 'Stewie', 'Quahog', 123123),
+    (123, 'Brian', 'RhodeIsland', 123420);
+
+INSERT INTO CITYDATA(PINCODE, CITY)
+VALUES
+    (123123, 'Quahog'),
+    (123699, 'LA'),
+    (123420, 'RhodeIsland');
