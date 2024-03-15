@@ -1,3 +1,7 @@
 micronaut:
   application:
     name: cityfetcher
+    scan:
+      packages:
+        - sahaj.ai.repositories
+        - sahaj.ai.controllers

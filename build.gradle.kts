@@ -27,6 +27,10 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
+    implementation("io.micronaut.data:micronaut-data-runtime")
+    runtimeOnly("org.postgresql:postgresql")
+    implementation("javax.persistence:javax.persistence-api:2.2")
 }
 
 
