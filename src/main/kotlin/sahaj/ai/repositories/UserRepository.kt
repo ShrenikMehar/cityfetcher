@@ -1,5 +1,6 @@
 package sahaj.ai.repositories
 
+import io.micronaut.serde.annotation.SerdeImport
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import java.sql.Connection
@@ -41,7 +42,24 @@ class UserRepository {
         return userData
     }
 
+    fun insertUserData(user: User): Boolean {
+        val query = "INSERT INTO userdata (id, name, city, pincode) VALUES (?, ?, ?, ?)"
+
+        val preparedStatement: PreparedStatement = connection.prepareStatement(query)
+        preparedStatement.setInt(1, user.id)
+        preparedStatement.setString(2, user.name)
+        preparedStatement.setString(3, user.city)
+        preparedStatement.setInt(4, user.pincode)
+
+        val rowsInserted = preparedStatement.executeUpdate()
+
+        preparedStatement.close()
+
+        return rowsInserted > 0
+    }
+
 }
 
 @Serdeable.Serializable
+@SerdeImport
 data class User(val id: Int, val name: String, val city: String, val pincode: Int)

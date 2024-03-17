@@ -1,11 +1,14 @@
 package sahaj.ai.repositories
 
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.serde.annotation.SerdeImport
 import io.micronaut.serde.annotation.Serdeable
 import jakarta.inject.Singleton
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
+
 
 @Singleton
 class CityRepository {
@@ -39,7 +42,22 @@ class CityRepository {
         return cityData
     }
 
+    fun insertCityData(city: City): Boolean {
+        val query = "INSERT INTO citydata (city, pincode) VALUES (?, ?)"
+
+        val preparedStatement: PreparedStatement = connection.prepareStatement(query)
+        preparedStatement.setString(1, city.name)
+        preparedStatement.setInt(2, city.pincode)
+
+        val rowsInserted = preparedStatement.executeUpdate()
+
+        preparedStatement.close()
+
+        return rowsInserted > 0
+    }
+
 }
 
 @Serdeable.Serializable
+@SerdeImport
 data class City(val name: String, val pincode: Int)
