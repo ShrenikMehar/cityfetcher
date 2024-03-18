@@ -56,6 +56,20 @@ class CityRepository {
         return rowsInserted > 0
     }
 
+    fun updateCityName(pincode: Int, newName: String): Boolean {
+        val query = "UPDATE citydata SET city = ? WHERE pincode = ?"
+
+        val preparedStatement: PreparedStatement = connection.prepareStatement(query)
+        preparedStatement.setString(1, newName)
+        preparedStatement.setInt(2, pincode)
+
+        val rowsUpdated = preparedStatement.executeUpdate()
+
+        preparedStatement.close()
+
+        return rowsUpdated > 0
+    }
+
 }
 
 @Serdeable.Serializable
