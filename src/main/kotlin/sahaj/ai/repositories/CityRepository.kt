@@ -70,6 +70,19 @@ class CityRepository {
         return rowsUpdated > 0
     }
 
+    fun deleteCityData(pincode: Int): Boolean {
+        val query = "DELETE FROM citydata WHERE pincode = ?"
+
+        val preparedStatement: PreparedStatement = connection.prepareStatement(query)
+        preparedStatement.setInt(1, pincode)
+
+        val rowsDeleted = preparedStatement.executeUpdate()
+
+        preparedStatement.close()
+
+        return rowsDeleted > 0
+    }
+
 }
 
 @Serdeable.Serializable

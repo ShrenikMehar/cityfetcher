@@ -72,6 +72,19 @@ class UserRepository {
         return rowsUpdated > 0
     }
 
+    fun deleteUserData(id: Int): Boolean {
+        val query = "DELETE FROM userdata WHERE id = ?"
+
+        val preparedStatement: PreparedStatement = connection.prepareStatement(query)
+        preparedStatement.setInt(1, id)
+
+        val rowsDeleted = preparedStatement.executeUpdate()
+
+        preparedStatement.close()
+
+        return rowsDeleted > 0
+    }
+
 }
 
 @Serdeable.Serializable

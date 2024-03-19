@@ -36,4 +36,13 @@ class CityController(
         return HttpStatus.BAD_REQUEST
     }
 
+    @Delete("/delete/{pincode}")
+    fun deleteCityData(@PathVariable pincode: Int): HttpStatus {
+        return if (cityRepository.deleteCityData(pincode)) {
+            HttpStatus.NO_CONTENT
+        } else {
+            HttpStatus.NOT_FOUND
+        }
+    }
+
 }
