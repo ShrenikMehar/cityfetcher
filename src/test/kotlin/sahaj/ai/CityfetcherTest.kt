@@ -70,16 +70,26 @@ class CityfetcherTest {
             .exchange(request, String::class.java)
 
         val pincode = 123666
-        val response: HttpResponse<Map<*, *>>? = client.toBlocking()
+        val response1: HttpResponse<Map<*, *>>? = client.toBlocking()
             .exchange("/cityData/$pincode", Map::class.java)
 
-        if (response != null) {
-            assertEquals(200, response.code())
+        if (response1 != null) {
+            assertEquals(200, response1.code())
         }
-        val body = response?.body()
+        val body = response1?.body()
         Assertions.assertNotNull(body)
         assertEquals("Florida", body!!["name"])
         assertEquals(123666, body["pincode"])
+
+        // Delete Record after successful record insertion
+        val pincodeToDelete = 123666
+
+        val deleteRequest = HttpRequest.DELETE<Any>("/cityData/delete/$pincodeToDelete")
+
+        val response2: HttpResponse<Any> = client.toBlocking()
+            .exchange(deleteRequest)
+
+        assertEquals(204, response2.status.code)
     }
 
     @Test
@@ -93,19 +103,76 @@ class CityfetcherTest {
             .exchange(request, String::class.java)
 
         val id = 169
-        val response2: HttpResponse<Map<*, *>>? = client.toBlocking()
+        val response1: HttpResponse<Map<*, *>>? = client.toBlocking()
             .exchange("/userData/$id", Map::class.java)
 
-        if (response2 != null) {
-            assertEquals(200, response2.code())
+        if (response1 != null) {
+            assertEquals(200, response1.code())
         }
-        val body = response2?.body()
+        val body = response1?.body()
         Assertions.assertNotNull(body)
         assertEquals(169, body!!["id"])
         assertEquals("Chris", body["name"])
         assertEquals("Quahog", body["city"])
         assertEquals(123456, body["pincode"])
+
+        // Delete Record after successful record insertion
+        val pincodeToDelete = 169
+
+        val deleteRequest = HttpRequest.DELETE<Any>("/userData/delete/$pincodeToDelete")
+
+        val response2: HttpResponse<Any> = client.toBlocking()
+            .exchange(deleteRequest)
+
+        assertEquals(204, response2.status.code)
     }
+
+    @Test
+    fun testDeleteCityData() {
+
+        // Create Record for Deletion
+        val userDataJson = "{\"name\":\"obama\",\"pincode\":369369}"
+
+        val request1 = HttpRequest.POST("/cityData/insert", userDataJson)
+            .contentType(MediaType.APPLICATION_JSON)
+
+        client.toBlocking()
+            .exchange(request1, String::class.java)
+
+        val pincodeToDelete = 369369
+
+        val request2 = HttpRequest.DELETE<Any>("/cityData/delete/$pincodeToDelete")
+
+        val response: HttpResponse<Any> = client.toBlocking()
+            .exchange(request2)
+
+        assertEquals(204, response.status.code)
+
+    }
+
+    @Test
+    fun testDeleteUserData() {
+
+        // Create Record for Deletion
+        val userDataJson = "{\"name\":\"california\",\"id\":122122,\"city\":\"lebronJames\",\"pincode\":666}"
+
+        val request1 = HttpRequest.POST("/userData/insert", userDataJson)
+            .contentType(MediaType.APPLICATION_JSON)
+
+        client.toBlocking()
+            .exchange(request1, String::class.java)
+
+        val idToDelete = 122122
+
+        val request2 = HttpRequest.DELETE<Any>("/userData/delete/$idToDelete")
+
+        val response: HttpResponse<Any> = client.toBlocking()
+            .exchange(request2)
+
+        assertEquals(204, response.status.code)
+
+    }
+
 }
 
 

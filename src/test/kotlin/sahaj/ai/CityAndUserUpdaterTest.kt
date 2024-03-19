@@ -27,10 +27,10 @@ class CityAndUserUpdaterTest {
         val pincode = 123699
         val updatedCityName = "LosSantos"
 
-        val request: HttpRequest<Any> =
+        val request1: HttpRequest<Any> =
             HttpRequest.PUT("/cityData/update/$pincode", mapOf("name" to updatedCityName))
 
-        client.toBlocking().exchange<Any, Any>(request)
+        client.toBlocking().exchange<Any, Any>(request1)
 
         val response1: HttpResponse<Map<*, *>>? = client.toBlocking()
             .exchange("/cityData/$pincode", Map::class.java)
@@ -58,6 +58,30 @@ class CityAndUserUpdaterTest {
         assertEquals("Quagmire", body2["name"])
         assertEquals("LosSantos", body2["city"])
         assertEquals(123699, body2["pincode"])
+
+
+        // Revert back to original city name
+        val originalCityName = "LA"
+
+        val request2: HttpRequest<Any> =
+            HttpRequest.PUT("/cityData/update/$pincode", mapOf("name" to originalCityName))
+
+        client.toBlocking().exchange<Any, Any>(request2)
+
+        val response3: HttpResponse<Map<*, *>>? = client.toBlocking()
+            .exchange("/userData/$id", Map::class.java)
+
+        if (response3 != null) {
+            assertEquals(200, response3.code())
+        }
+
+        val body3 = response3?.body()
+        Assertions.assertNotNull(body3)
+        assertEquals(420, body3!!["id"])
+        assertEquals("Quagmire", body3["name"])
+        assertEquals("LA", body3["city"])
+        assertEquals(123699, body3["pincode"])
+
 
     }
 }
